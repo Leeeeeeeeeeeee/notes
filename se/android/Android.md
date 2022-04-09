@@ -2139,6 +2139,23 @@ implementation 'com.android.support:recyclerview-V7:28.0.0'//版本需要和appc
 
 ![image-20220408172536624](E:\Libraries\notes\se\android\Android_files\image-20220408172536624.png)
 
+**布局方式**
+
+```java
+LinearLayoutManager linearLayoutManager = new LinearLayoutManager( context: this)
+//横向排列ItemView
+linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+mRecyclerView.setLayoutManager( linearLayoutManager);
+//数据反向展示
+linearLayoutManager.setReverseLayout(true);
+//网格布局
+GridLayoutManager gridLayoutManager = new GridLayoutManage(this,2)
+mRecyclerView.setLayoutManager(gridLayoutManager);
+//瀑布流布局
+StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2StaggeredGridLayoutManager.VERTICAL);
+StaggeredGridLaymRecyclerView.setLayoutManager(staggeredGridLayoutManager);
+```
+
 
 
 官方文档
