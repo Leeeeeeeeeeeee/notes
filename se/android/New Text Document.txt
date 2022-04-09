@@ -1,0 +1,14 @@
+ NotificationChannel channel = new NotificationChannel("qy", "qyl",
+                    NotificationManager.IMPORTANCE_HIGH);
+            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            if (manager != null) {
+                manager.createNotificationChannel(channel);
+                Notification.Builder builder = new Notification.Builder(getApplicationContext(), "qy")
+                        .setSound(Settings.System.DEFAULT_NOTIFICATION_URI).setSmallIcon(R.mipmap.ic_launcher_round)
+                        .setContentTitle("训练系统网络连接正常")
+                        .setDefaults(Notification.DEFAULT_ALL)//设置默认提示音.
+                        .setPriority(Notification.PRIORITY_DEFAULT)//设置优先级
+                        .setOngoing(false);//设置让通知左右滑不能删除通知
+
+                Notification notification = builder.build();
+                startForeground(GRAY_SERVICE_ID, notification);

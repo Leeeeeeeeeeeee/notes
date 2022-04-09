@@ -408,24 +408,6 @@ tv.setText(str+name);
 
 ![image-20220315171848965](D:\Libraries\notes\se\android\Android_files\image-20220315171848965.png)
 
-# Service
-
-![image-20220310093313926](D:\notes\cs\数据结构与算法\imgs\image-20220310093313926.png)
-
-android 使用service时遇到 java.lang.IllegalArgumentException
-
-https://www.jianshu.com/p/07be44e9b6cf
-
-关于通过bindService启动的service，在unbindService后service是否继续运行的讨论
-
-有三种情况：如果直接使用服务，则没有必要进行绑定，但是如果要使用服务里面的方法，则要进行绑定。具体的启动情况有下：
-
-1. 当启动时，单独调用bindService方法，在unbindService后，会执行service的onUnbind，在执行onDestroy方法。
-
-2. 当启动时，先调用startService，再调用bindService方法后，在unbindService后，会执行service的onUnbind，不会执行onDestroy方法。除非你在执行stopService.
-
-  3. 先调用startService，在调用stopService，会执行service的onDestroy方法。
-
 # Application
 
 ![image-20220315172918003](D:\Libraries\notes\se\android\Android_files\image-20220315172918003.png)
@@ -2145,6 +2127,19 @@ app:useCompatPadding="true"
 ````
 
 ### RecyclerView
+
+**添加依赖**
+
+```gradle
+implementation 'com.android.support:appcompat=v7:28.0.0'
+implementation 'com.android.support:recyclerview-V7:28.0.0'//版本需要和appcompat包的版本一致
+```
+
+忽略警告的操作：
+
+![image-20220408172536624](E:\Libraries\notes\se\android\Android_files\image-20220408172536624.png)
+
+
 
 官方文档
 
