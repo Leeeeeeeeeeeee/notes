@@ -3501,6 +3501,33 @@ public class MyBluetoothService {
 
 EventBus监听流程：在订阅者中定义监听器，传递给发布者，发布者使用监听器
 
+## Glide
+
+加载图片
+
+![image-20220411111100490](E:\Libraries\notes\se\android\Android_files\image-20220411111100490.png)
+
+![image-20220411111304576](E:\Libraries\notes\se\android\Android_files\image-20220411111304576.png)
+
+对比其他图片加载库：
+
+UniversalImageLoader功能全面但使用比较复杂
+
+Volley谷歌推出，功能不够强大
+
+Picasso不支持GIF图片加载
+
+## GreenDao
+
+地址:https://github.com/greenrobot/greenDAO
+
+基本概念
+
+某实体类------>某表
+某DAO-------->数据访问对象（某表的操作)
+DaoMaster---->数据库连接对象
+DaoSession--->由连接生成的会话
+
 # 其他
 
 ## 时间
