@@ -1,0 +1,43 @@
+python写了一遍代码，然后java，都有问题。
+
+def dispasolution(path):
+    print(" {",end="")
+    for i in path:
+        print(i,end="")
+    print("}",end="")
+
+def dfs(a,n,i,path):
+    if(i==n):
+        dispasolution(path)
+        return
+    else:
+        dfs(a,n,i+1,path)
+        path.append(a[i])
+        dfs(a,n,i+1,path)
+
+if __name__=='__main__':
+    a = [1,2,3]
+    n = len(a)
+    path=[]
+    dfs(a,n,0,path)
+    
+class Solution {
+
+    List<List<Integer>> sets = new ArrayList<>();
+    public List<List<Integer>> subsets(int[] nums) {
+        List<Integer> sub = new ArrayList<>();
+        dfs(nums,nums.length,0,sub);
+        return sets;
+    }
+    public void dfs(int[] nums,int n,int i,List<Integer> sub){
+        if(i==n){
+            sets.add(sub);
+            sub.clear();
+            return;
+        }else{
+            dfs(nums,n,i+1,sub);
+            sub.add(nums[i]);
+            dfs(nums,n,i+1,sub);
+        }
+    }
+}
