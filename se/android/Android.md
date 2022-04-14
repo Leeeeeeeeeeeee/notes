@@ -13,7 +13,63 @@ NDK：Native Development Kit，Android原生工具开发包
 
 ### 安卓系统架构
 
-![QQ截图20220227203857](Android_files\QQ截图20220227203857.png)
+# Android系统架构
+
+总的来说，Android的系统体系结构分为**四层**，自顶向下分别是：
+
+- 应用程序(Applications)
+- 应用程序框架(Application Frameworks)
+- 系统运行库与Android运行环境(Libraris & Android Runtime)
+- Linux内核(Linux Kernel)
+
+*安卓系统结构示意图*
+![Android System Architecture](E:\Libraries\notes\se\android\Android_files\2.png)
+
+下面对每层进行详细说明
+
+## 1. 应用程序(Applications)
+
+Android会同一系列核心应用程序包一起发布，该应用程序包包括email客户端，SMS短消息程序，日历，地图，浏览器，联系人管理程序等。所有的应用程序都是使用JAVA语言编写的。通常开发人员就处在这一层。
+
+## 2. 应用程序框架(Application Frameworks)
+
+提供应用程序开发的各种API进行快速开发，也即隐藏在每个应用后面的是一系列的服务和系统，大部分使用Java编写，所谓官方源码很多也就是看这里，其中包括：
+
+- 丰富而又可扩展的视图（Views），可以用来构建应用程序， 它包括列表（lists），网格（grids），文本框（text boxes），按钮（buttons）， 甚至可嵌入的web浏览器。
+- 内容提供器（Content Providers）使得应用程序可以访问另一个应用程序的数据（如联系人数据库）， 或者共享它们自己的数据
+- 资源管理器（Resource Manager）提供 非代码资源的访问，如本地字符串，图形，和布局文件（ layout files ）。
+- 通知管理器 （Notification Manager） 使得应用程序可以在状态栏中显示自定义的提示信息。
+- 活动管理器（ Activity Manager） 用来管理应用程序生命周期并提供常用的导航回退功能。
+
+## 3. 系统运行库与Android运行环境(Libraris & Android Runtime)
+
+### 1) 系统运行库
+
+Android 包含一些C/C++库，这些库能被Android系统中不同的组件使用。它们通过 Android 应用程序框架为开发者提供服务。以下是一些核心库：
+
+- **Bionic系统 C 库** - 一个从 BSD 继承来的标准 C 系统函数库（ libc ）， 它是专门为基于 embedded linux 的设备定制的。
+- **媒体库** - 基于 PacketVideo OpenCORE；该库支持多种常用的音频、视频格式回放和录制，同时支持静态图像文件。编码格式包括MPEG4, H.264, MP3, AAC, AMR, JPG, PNG 。
+- **Surface Manager** - 对显示子系统的管理，并且为多个应用程序提 供了2D和3D图层的无缝融合。这部分代码
+- **Webkit,LibWebCore** - 一个最新的web浏览器引擎用，支持Android浏览器和一个可嵌入的web视图。鼎鼎大名的 Apple Safari背后的引擎就是Webkit
+- **SGL** - 底层的2D图形引擎
+- **3D libraries** - 基于OpenGL ES 1.0 APIs实现；该库可以使用硬件 3D加速（如果可用）或者使用高度优化的3D软加速。
+- **FreeType** -位图（bitmap）和矢量（vector）字体显示。
+- **SQLite** - 一个对于所有应用程序可用，功能强劲的轻型关系型数据库引擎。
+- 还有部分上面没有显示出来的就是硬件抽象层。其实Android并非讲所有的设备驱动都放在linux内核里面，而是实现在userspace空间，这么做的主要原因是GPL协议，Linux是遵循该 协议来发布的，也就意味着对 linux内核的任何修改，都必须发布其源代码。而现在这么做就可以避开而无需发布其源代码，毕竟它是用来赚钱的。 而 在linux内核中为这些userspace驱动代码开一个后门，就可以让本来userspace驱动不可以直接控制的硬件可以被访问。而只需要公布这个 后门代码即可。一般情况下如果要将Android移植到其他硬件去运行，只需要实现这部分代码即可。包括：显示器驱动，声音，相机，GPS,GSM等等
+
+### 2) Android运行环境
+
+该核心库提供了JAVA编程语言核心库的大多数功能。
+每一个Android应用程序都在它自己的进程中运 行，都拥有一个独立的Dalvik虚拟 机实例。Dalvik被设计成一个设备可以同时高效地运行多个虚拟系统。 Dalvik虚拟机执行（.dex）的Dalvik可执行文件，该格式文件针对小内存使用做了 优化。同时虚拟机是基于寄存器的，所有的类都经由JAVA编译器编译，然后通过SDK中 的 "dx" 工具转化成.dex格式由虚拟机执行。
+
+## 4. Linux内核(Linux Kernel)
+
+Android的核心系统服务依赖于Linux 2.6 内核，如安全性，内存管理，进程管理， 网络协议栈和驱动模型。 Linux 内核也同时作为硬件和软件栈之间的抽象层。其外还对其做了部分修改，主要涉及两部分修改：
+
+1. Binder (IPC)：提供有效的进程间通信，虽然linux内核本身已经提供了这些功能，但Android系统很多服务都需要用到该功能，为了某种原因其实现了自己的一套。
+2. 电源管理：主要是为了省电，毕竟是手持设备嘛，低耗电才是我们的追求。
+
+注:最后附上原博连接[懒虫一个V：android系统体系结构](http://blog.csdn.net/spy19881201/article/details/5775484)，关于谷歌Android源码的目录结构并未一并贴出可在原博查阅
 
 ### Dalvik
 
@@ -23,7 +79,7 @@ Dalvik是Google公司设计的，用于在Android平台上运行的虚拟机，�
 
 ### Android版本
 
-![image-20220227204103929](E:\notes\codes\android\Android_files\image-20220227204103929.png)
+![image-20220227204103929](\Android_files\image-20220227204103929.png)
 
 - Gingerbread 号称最稳定 手机届的xp系统
 - honeycomb  平板
@@ -31,7 +87,7 @@ Dalvik是Google公司设计的，用于在Android平台上运行的虚拟机，�
 
 ### Android应用领域
 
-![image-20220227204157281](E:\notes\codes\android\Android_files\image-20220227204157281.png)
+![image-20220227204157281](Android_files\image-20220227204157281.png)
 
 # AndroidStudio
 
@@ -39,23 +95,23 @@ Dalvik是Google公司设计的，用于在Android平台上运行的虚拟机，�
 
 jnu.text(androidTest) 和 jnu.text(test)的产生
 
-![image-20220227205103530](E:\notes\codes\android\Android_files\image-20220227205103530.png)
+![image-20220227205103530](Android_files\image-20220227205103530.png)
 
 cmd下启动使用模拟器
 
-![image-20220227205156214](E:\notes\codes\android\Android_files\image-20220227205156214.png)
+![image-20220227205156214](Android_files\image-20220227205156214.png)
 
 先运行一次程序才能找到R文件
 
-![image-20220227205228484](E:\Android_files\image-20220227205228484.png)
+![image-20220227205228484](Android_files\image-20220227205228484.png)
 
-![image-20220227205241703](E:\notes\codes\android\Android_files\image-20220227205241703.png)
+![image-20220227205241703](\Android_files\image-20220227205241703.png)
 
 ## 快捷键
 
 | 快捷键          | 用途               |
 | --------------- | ------------------ |
-| Ctrl+Alt+V      | 提取全局变量       |
+|                 |                    |
 | Ctrl+Alt+(空格) | 提示化代码         |
 | Alt+F           | 格式化代码(自定义) |
 | Ctrl+Q          | 显示文档说明       |
@@ -63,6 +119,7 @@ cmd下启动使用模拟器
 | Ctrl+F          | 查找               |
 | Ctrl+Alt+C      | 抽取字符串为常量   |
 | Ctrl+Alt+M      | 提取方法           |
+| Ctrl+Alt+F      | 提取全局变量       |
 
 ## 注意
 
@@ -206,6 +263,26 @@ method2 代码设置![0.7581949137520234.png](Android_files/0.7581949137520234.p
 
 注意事项:
 不要在MainActivity的onPause()中做耗时操作,可以把处理放到onStop,否则会影响SecondActivity的启动速度
+
+## 四种状态
+
+**1. 活动（Active/Running）状态**
+
+当Activity运行在屏幕前台(处于当前任务活动栈的最上面),此时它获取了焦点能响应用户的操作,属于运行状态，同一个时刻只会有一个Activity 处于活动(Active)或运行(Running)状态。
+
+此状态由onResume()进入，由onPause()退出
+
+**2. 暂停(Paused)状态**
+
+当Activity失去焦点(如在它之上有另一个透明的Activity或返回桌面)它将处于暂停, 再进而进入其他状态。暂停的Activity仍然是存活状态(它保留着所有的状态和成员信息并保持和窗口管理器的连接),但是当系统内存极小时可以被系统杀掉。Android7.0后, 多窗口模式下失去焦点的Activity也将进入onPause，但这不意味着Activity中的活动(动画、视频)等会暂停。虽然官方文档使用的是"an activity is going into the background" 来描述，但这不意味着一个Toast或者由本Activity创建的Dialog会调用onPause。结合[这里](https://hit-alibaba.github.io/interview/Android/basic/Android-LaunchMode.html)对Activity的栈机制不难理解，只要当前Activity仍处于栈顶，系统就默认其仍处于活跃状态。
+
+此状态由onPause()进入，可能下一步进入onResume()或者onCreate()重新唤醒软件，或者被onStop()杀掉
+
+**3. 停止(Stopped)状态**
+
+完全被另一个Activity遮挡时处于停止状态,它仍然保留着所有的状态和成员信息。只是对用户不可见,当其他地方需要内存时它往往被系统杀掉。
+
+该状态由onStop()进入，如果被杀掉，可能进入onCreate()或onRestart()，如果彻底死亡，进入onDestroy()
 
 ## Activity启动方式
 
@@ -717,7 +794,7 @@ LayoutParams相当于一个Layout的信息包，它封装了Layout的位置、�
 但LayoutParams类也只是简单的描述了宽高，宽和高都可以设置成三种值： 
 
 1. 一个确定的值； 
-2. FILL_PARENT，即填满（和父容器一样大小）； 
+2. MATH_PARENT，即填满（和父容器一样大小）； 
 3. WRAP_CONTENT，即包裹住组件就好。
 
 如果某View被LinearLayout包含，则该View的setLayoutParams参数类型必须是LinearLayout.LayoutParams。
@@ -1640,7 +1717,7 @@ https://www.jianshu.com/p/b105019028b6
 
 **生命周期**
 
-![image-20220302110412972](D:\notes\codes\android\Android_files\image-20220302110412972.png)
+![image-20220302110412972](Android_files\image-20220302110412972.png)
 
 **使用**
 
@@ -1648,9 +1725,9 @@ method1 静态加载
 
 method2 动态加载
 
-![image-20220302110520216](D:\notes\codes\android\Android_files\image-20220302110520216.png)
+![image-20220302110520216](Android_files\image-20220302110520216.png)
 
-![image-20220302110531350](D:\notes\codes\android\Android_files\image-20220302110531350.png)
+![image-20220302110531350](Android_files\image-20220302110531350.png)
 
 **Activity与Fragment传值**
 
@@ -1658,18 +1735,18 @@ method2 动态加载
 
 在Fragment类中
 
-![image-20220302110621735](D:\notes\codes\android\Android_files\image-20220302110621735.png)
+![image-20220302110621735](Android_files\image-20220302110621735.png)
 
-![image-20220302110631934](D:\notes\codes\android\Android_files\image-20220302110631934.png)
+![image-20220302110631934](Android_files\image-20220302110631934.png)
 
 在Activity中
 
-![image-20220302110655823](D:\notes\codes\android\Android_files\image-20220302110655823.png)
+![image-20220302110655823](Android_files\image-20220302110655823.png)
 
 ②fragment向activity传值（采用回调方法）
 在fragment中
 
-![image-20220302110717111](D:\notes\codes\android\Android_files\image-20220302110717111.png)
+![image-20220302110717111](Android_files\image-20220302110717111.png)
 
 ## ViewPager
 
@@ -1681,33 +1758,33 @@ method2 动态加载
 
 step1 定义ViewPager对象和视图id数组
 
-![image-20220302110821450](D:\notes\codes\android\Android_files\image-20220302110821450.png)
+![image-20220302110821450](Android_files\image-20220302110821450.png)
 
 step2 把视图添加到视图List中
 
-![image-20220302110838895](D:\notes\codes\android\Android_files\image-20220302110838895.png)
+![image-20220302110838895](Android_files\image-20220302110838895.png)
 
 step3 添加适配器PagerAdapter
 
-![image-20220302110857439](D:\notes\codes\android\Android_files\image-20220302110857439.png)
+![image-20220302110857439](Android_files\image-20220302110857439.png)
 
-![image-20220302110909238](D:\notes\codes\android\Android_files\image-20220302110909238.png)
+![image-20220302110909238](Android_files\image-20220302110909238.png)
 
 或者FragmentPagerAdapter
 
-![image-20220302110930646](D:\notes\codes\android\Android_files\image-20220302110930646.png)
+![image-20220302110930646](Android_files\image-20220302110930646.png)
 
-![image-20220302110941927](D:\notes\codes\android\Android_files\image-20220302110941927.png)
+![image-20220302110941927](Android_files\image-20220302110941927.png)
 
 Fragment中
 
-![image-20220302110958673](D:\notes\codes\android\Android_files\image-20220302110958673.png)
+![image-20220302110958673](Android_files\image-20220302110958673.png)
 
 **监听器**
 
 ①视图转换监听器
 
-![image-20220302111029409](D:\notes\codes\android\Android_files\image-20220302111029409.png)
+![image-20220302111029409](Android_files\image-20220302111029409.png)
 
 ## UI控件
 
@@ -1734,7 +1811,6 @@ android:autoSizePresetSizes：
 预设定的尺寸数组（类型为uniform时生效），会autoSizeStepGranularity属性覆盖
 android:autoSizeStepGranularity：
 自动调整字体大小的阶级（类型为uniform时生效），默认1px，会被autoSizePresetSizes属性覆盖
-
 
 //关于字体大小使用sp?dp?
 如果使用dp则设置系统字体大小的时候app内的字体大小不变，使用sp则改变，一般实际开发中使用dp，防止布局错位，然后在app内提供设置字体大小的功能
@@ -1998,7 +2074,7 @@ if(view==null){
 ```java
 ViewHolder holder;
 if(view==null){
-    Log.e("TAG","====="+i);
+    Log.e("TAG","====="+i); 
     //优化1:利用进入RecyclerBin中的View,减少读view的赋值
     view = LayoutInflater.from(ctx).inflate(R.layout.item,null);
     holder = new ViewHolder();
@@ -2014,6 +2090,24 @@ if(view==null){
     holder = (ViewHolder)view.getTag();
 }
 ```
+
+ListView的优化(以异步加载Bitmap优化为例)
+首先概括的说ListView优化分为三级缓存:
+
+内存缓存
+文件缓存
+网络读取
+简要概括就是在getView中，如果加载过一个图片，放入Map类型的一个MemoryCache中(示例代码使用的是Collections.synchronizedMap(new LinkedHashMap(10, 1.5f, true))来维护一个试用LRU的堆)。如果这里获取不到，根据View被Recycle之前放入的TAG中记录的uri从文件系统中读取文件缓存。如果本地都找不到，再去网络中异步加载。
+
+这里有几个注意的优化点：
+
+从文件系统中加载图片也没有内存中加载那么快，甚至可能内存中加载也不够快。因此在ListView中应设立busy标志位，当ListView滚动时busy设为true，停止各个view的图片加载。否则可能会让UI不够流畅用户体验度降低。
+文件加载图片放在子线程实现，否则快速滑动屏幕会卡
+开启网络访问等耗时操作需要开启新线程，应使用线程池避免资源浪费，最起码也要用AsyncTask。
+Bitmap从网络下载下来最好先放到文件系统中缓存。这样一是方便下一次加载根据本地uri直接找到，二是如果Bitmap过大，从本地缓存可以方便的使用Option.inSampleSize配合Bitmap.decodeFile(ui, options)或Bitmap.createScaledBitmap来进行内存压缩
+**原博文有非常好的代码示例: Listview异步加载图片之优化篇（有图有码有解释）非常值得看看。
+
+此外Github上也有仓库：https://github.com/geniusgithub/SyncLoaderBitmapDemo
 
 ### ExpanableListView
 
@@ -2046,10 +2140,6 @@ setOnGroupCollapseListener();
 setOnGroupExpandListener();
     
 ```
-
-
-
-
 
 ### FloatingActionButton
 
@@ -2091,9 +2181,7 @@ app:fabSize
 
 auto：FloatingActionButton的大小会根据屏幕的大小自己改变，对于小屏幕设备（最大屏幕尺寸小于470 dp）会使用mini尺寸，比这个更大的屏幕会使用normal尺寸。
 
-    
 mFAButton.setSize(FloatingActionButton.SIZE_AUTO); // 设置Fab的大小
-
 
 app:elevation="6dp"
 
@@ -2101,9 +2189,8 @@ app:elevation="6dp"
 高度值越大，投影效果越淡，投影范围越大。
 高度值越小，投影效果越浓，投影范围越小。
 
-    //设置FloatingActionButton的高度值，产生相应的阴影效果
+//设置FloatingActionButton的高度值，产生相应的阴影效果
 mFAButton.setCompatElevation(5.0F); 
-
 
 app:rippleColor
 
@@ -2204,11 +2291,11 @@ xml属性：app:logo="@drawable/xxx"//引入一张图标；
 
 3.0以前：在Android3.0，当用户按“菜单”按钮时，选项菜单的内容会出现在屏幕底部，如图1所示,可包含多达6个菜单项，超出部分则以“更多”来显示。
 
-![image-20220302095554245](D:\notes\codes\android\Android_files\image-20220302095554245.png)
+![image-20220302095554245](Android_files\image-20220302095554245.png)
 
 3.0以后：在Android3.0及更高版本的系统中，选项菜单中的项目将出现在操作栏中，用户可以使用操作栏右侧的图标或者按设备的菜单键显示操作溢出菜单。
 
-![image-20220302095630664](D:\notes\codes\android\Android_files\image-20220302095630664.png)
+![image-20220302095630664](Android_files\image-20220302095630664.png)
 
 ### 选项菜单（OptionMenu）
 
@@ -2216,11 +2303,11 @@ xml属性：app:logo="@drawable/xxx"//引入一张图标；
 
 step1 新建菜单资源文件
 
-![image-20220302095701112](D:\notes\codes\android\Android_files\image-20220302095701112.png)
+![image-20220302095701112](Android_files\image-20220302095701112.png)
 
 在Design模式下编辑
 
-![image-20220302095735376](D:\notes\codes\android\Android_files\image-20220302095735376.png)
+![image-20220302095735376](Android_files\image-20220302095735376.png)
 
 在Text模式下编辑
 
@@ -2228,7 +2315,7 @@ step1 新建菜单资源文件
 
 step2 在相应的Activity类下创建OptionMenu
 
-![image-20220302095859000](D:\notes\codes\android\Android_files\image-20220302095859000.png)
+![image-20220302095859000](Android_files\image-20220302095859000.png)
 
 #### 属性
 
@@ -2240,11 +2327,11 @@ always表示菜单内容显示在导航栏上
 
 当有图标时默认只显示图标
 
-![image-20220302100118329](D:\notes\codes\android\Android_files\image-20220302100118329.png)
+![image-20220302100118329](Android_files\image-20220302100118329.png)
 
 withText表示不仅显示图标还显示文字
 
-![image-20220302100155105](D:\notes\codes\android\Android_files\image-20220302100155105.png)
+![image-20220302100155105](Android_files\image-20220302100155105.png)
 
 never表示不显示
 
@@ -2252,7 +2339,7 @@ ifRoom表示如果有足够的空间再显示
 
 #### 点击响应
 
-![image-20220302100248624](D:\notes\codes\android\Android_files\image-20220302100248624.png)
+![image-20220302100248624](Android_files\image-20220302100248624.png)
 
 #### 注意
 
@@ -2266,30 +2353,30 @@ ifRoom表示如果有足够的空间再显示
 
 step1 在Activity中注册
 
-![image-20220302100430780](D:\notes\codes\android\Android_files\image-20220302100430780.png)
+![image-20220302100430780](Android_files\image-20220302100430780.png)
 
 step2 在Activity中重写onCreateContextMenu方法
 
-![image-20220302100507192](D:\notes\codes\android\Android_files\image-20220302100507192.png)
+![image-20220302100507192](Android_files\image-20220302100507192.png)
 
 step3 重新onContextItemSelected方法进行菜单项的操作
 
-![image-20220302100544312](D:\notes\codes\android\Android_files\image-20220302100544312.png)
+![image-20220302100544312](Android_files\image-20220302100544312.png)
 
 step4 为按钮设置上下文操作模式
 
 ①实现ActionMode CallBack
 ②在view的长按事件中去启动上下文操作模式
 
-![image-20220302100652889](D:\notes\codes\android\Android_files\image-20220302100652889.png)
+![image-20220302100652889](Android_files\image-20220302100652889.png)
 
-![image-20220302100738480](D:\notes\codes\android\Android_files\image-20220302100738480.png)'![image-20220302100753240](D:\notes\codes\android\Android_files\image-20220302100753240.png)
+![image-20220302100738480](Android_files\image-20220302100738480.png)'![image-20220302100753240](D:\notes\codes\android\Android_files\image-20220302100753240.png)
 
-![image-20220302100806920](D:\notes\codes\android\Android_files\image-20220302100806920.png)
+![image-20220302100806920](Android_files\image-20220302100806920.png)
 
-![image-20220302100821008](D:\notes\codes\android\Android_files\image-20220302100821008.png)
+![image-20220302100821008](Android_files\image-20220302100821008.png)
 
-![image-20220302100832400](D:\notes\codes\android\Android_files\image-20220302100832400.png)
+![image-20220302100832400](Android_files\image-20220302100832400.png)
 
 ### 弹出菜单（PopupMenu）
 
@@ -2297,17 +2384,17 @@ step4 为按钮设置上下文操作模式
 
 #### 使用
 
-![image-20220302100929032](D:\notes\codes\android\Android_files\image-20220302100929032.png)
+![image-20220302100929032](Android_files\image-20220302100929032.png)
 
-![image-20220302100940504](D:\notes\codes\android\Android_files\image-20220302100940504.png)
+![image-20220302100940504](Android_files\image-20220302100940504.png)
 
-![image-20220302100950311](D:\notes\codes\android\Android_files\image-20220302100950311.png)
+![image-20220302100950311](Android_files\image-20220302100950311.png)
 
 ### Menu创建方式的优缺点
 
 option1 通过xml定义：菜单一般在res中创建menu目录放置资源文件
 
-![image-20220302101041759](D:\notes\codes\android\Android_files\image-20220302101041759.png)
+![image-20220302101041759](Android_files\image-20220302101041759.png)
 
 清晰的菜单结构
 
@@ -2317,18 +2404,18 @@ option1 通过xml定义：菜单一般在res中创建menu目录放置资源文�
 
 option2 通过java定义
 
-![image-20220302101142481](D:\notes\codes\android\Android_files\image-20220302101142481.png)
+![image-20220302101142481](Android_files\image-20220302101142481.png)
 
-![image-20220302101150072](D:\notes\codes\android\Android_files\image-20220302101150072.png)
+![image-20220302101150072](Android_files\image-20220302101150072.png)
 
 ### 处理Menu显示问题
 
-![image-20220302101249560](D:\notes\codes\android\Android_files\image-20220302101249560.png)
+![image-20220302101249560](Android_files\image-20220302101249560.png)
 
 - onCreateOptionsMenu()必须返回true，否则菜单不显示
 - onOptionsItemSelected()方法返回true，告诉系统此处的操作已经完成；同时在switch中添加default实现父类功能避免有些操作未完成
 
-![image-20220302101319360](D:\notes\codes\android\Android_files\image-20220302101319360.png)
+![image-20220302101319360](Android_files\image-20220302101319360.png)
 
 ## Dialog对话框
 
@@ -2336,7 +2423,7 @@ option2 通过java定义
 
 method1 
 
-![image-20220302104833712](D:\notes\codes\android\Android_files\image-20220302104833712.png)
+![image-20220302104833712](Android_files\image-20220302104833712.png)
 
 method2(相对麻烦)
 
@@ -2346,23 +2433,23 @@ method2(相对麻烦)
 
 step1 创建PopupWindow对象实例
 
-![image-20220302105111831](D:\notes\codes\android\Android_files\image-20220302105111831.png)
+![image-20220302105111831](Android_files\image-20220302105111831.png)
 
 step2 设置背景、注册事件监听器和添加动画
 
-![image-20220302105130454](D:\notes\codes\android\Android_files\image-20220302105130454.png)
+![image-20220302105130454](Android_files\image-20220302105130454.png)
 
-![image-20220302105142342](D:\notes\codes\android\Android_files\image-20220302105142342.png)
+![image-20220302105142342](Android_files\image-20220302105142342.png)
 
-![image-20220302105154311](D:\notes\codes\android\Android_files\image-20220302105154311.png)
+![image-20220302105154311](Android_files\image-20220302105154311.png)
 
-![image-20220302105225495](D:\notes\codes\android\Android_files\image-20220302105225495.png)
+![image-20220302105225495](Android_files\image-20220302105225495.png)
 
-![image-20220302105236015](D:\notes\codes\android\Android_files\image-20220302105236015.png)
+![image-20220302105236015](Android_files\image-20220302105236015.png)
 
 step3 显示PopupWindow
 
-![image-20220302105257774](D:\notes\codes\android\Android_files\image-20220302105257774.png)
+![image-20220302105257774](Android_files\image-20220302105257774.png)
 
 
 
@@ -2372,15 +2459,15 @@ step1 设置自定义对话框样式-->dialog_layout.xml
 
 step2 设置style（去标题栏，去背景）
 
-![image-20220302104940023](D:\notes\codes\android\Android_files\image-20220302104940023.png)
+![image-20220302104940023](Android_files\image-20220302104940023.png)
 
 step3 将第一步的布局应用到当前定义的对话框
 
-![image-20220302105007622](D:\notes\codes\android\Android_files\image-20220302105007622.png)
+![image-20220302105007622](Android_files\image-20220302105007622.png)
 
 step4 实例化对话框
 
-![image-20220302105030279](D:\notes\codes\android\Android_files\image-20220302105030279.png)
+![image-20220302105030279](Android_files\image-20220302105030279.png)
 
 ## 系统控件
 
@@ -2403,7 +2490,7 @@ public boolean dispatchTouchEvent*(*MotionEvent ev*) {*    if *(*ev.getAction*()
 
 屏幕尺寸指屏幕的对角线的长度，单位是英寸，1英寸=2.54厘米常见尺寸:2.4，2.8，3.5，3.7，4.2，5.0，5.5，6.0等
 
-![image-20220301204643247](D:\notes\codes\android\Android_files\image-20220301204643247.png)
+![image-20220301204643247](Android_files\image-20220301204643247.png)
 
 #### 屏幕分辨率
 
@@ -2413,7 +2500,7 @@ public boolean dispatchTouchEvent*(*MotionEvent ev*) {*    if *(*ev.getAction*()
 
 屏幕像素密度是指每英寸上的像素点数，单位是dpi，即“dot per inch”的缩写。屏幕像素密度与屏幕尺寸和屏幕分辨率有关。
 
-![image-20220301205219484](D:\notes\codes\android\Android_files\image-20220301205219484.png)
+![image-20220301205219484](Android_files\image-20220301205219484.png)
 
 #### 像素单位
 
@@ -2456,19 +2543,19 @@ density:(像素密度/160dpi)
 1. 提供不同分辨率的备用位图
 2. 使用自动拉伸图（.9图）
 
-![image-20220301212037984](D:\notes\codes\android\Android_files\image-20220301212037984.png)
+![image-20220301212037984](Android_files\image-20220301212037984.png)
 
 视图上方鼠标横向拉动：设置横向拉伸范围
 
-![image-20220301212053320](D:\notes\codes\android\Android_files\image-20220301212053320.png)
+![image-20220301212053320](Android_files\image-20220301212053320.png)
 
 视图左部鼠标纵向移动：设置纵向拉伸范围
 
-![image-20220301212232448](D:\notes\codes\android\Android_files\image-20220301212232448.png)
+![image-20220301212232448](Android_files\image-20220301212232448.png)
 
 视图右边鼠标纵向移动：设置文本显示的纵向范围
 
-![image-20220301212308986](D:\notes\codes\android\Android_files\image-20220301212308986.png)
+![image-20220301212308986](Android_files\image-20220301212308986.png)
 
 视图下方鼠标横向移动，设置文本显示的横向范围
 
@@ -2555,11 +2642,11 @@ step1 获取外部存储路径
 
 外部存储公有目录（应用卸载后仍然存在）
 
-![image-20220302163047936](D:\notes\codes\android\Android_files\image-20220302163047936.png)
+![image-20220302163047936](Android_files\image-20220302163047936.png)
 
 外部存储私有目录（随着应用卸载一起被清除）（不需要权限）
 
-![image-20220302165212386](D:\notes\codes\android\Android_files\image-20220302165212386.png)
+![image-20220302165212386](Android_files\image-20220302165212386.png)
 
 第一个为长期数据
 
@@ -2567,15 +2654,15 @@ step1 获取外部存储路径
 
 step2 检测内存卡是否存在
 
-![image-20220302163109046](D:\notes\codes\android\Android_files\image-20220302163109046.png)
+![image-20220302163109046](Android_files\image-20220302163109046.png)
 
 step3 写入操作
 
-![image-20220302163302062](D:\notes\codes\android\Android_files\image-20220302163302062.png)
+![image-20220302163302062](Android_files\image-20220302163302062.png)
 
 step4 读取操作
 
-![image-20220302164212054](D:\notes\codes\android\Android_files\image-20220302164212054.png)
+![image-20220302164212054](Android_files\image-20220302164212054.png)
 
 ### 内部存储
 
@@ -2587,7 +2674,7 @@ step4 读取操作
 
 **app**
 
-![image-20220302165731801](D:\notes\codes\android\Android_files\image-20220302165731801.png)
+![image-20220302165731801](Android_files\image-20220302165731801.png)
 
 存放apk文件
 
@@ -2595,27 +2682,27 @@ step4 读取操作
 
 应用包名下
 
-![image-20220302165815560](D:\notes\codes\android\Android_files\image-20220302165815560.png)
+![image-20220302165815560](Android_files\image-20220302165815560.png)
 
 **步骤**
 
 step1 获取内部存储目录
 
-![image-20220302165928797](D:\notes\codes\android\Android_files\image-20220302165928797.png)
+![image-20220302165928797](Android_files\image-20220302165928797.png)
 
 一样的，files放置长期数据，cache放置缓存数据
 
-![image-20220302170001757](D:\notes\codes\android\Android_files\image-20220302170001757.png)
+![image-20220302170001757](Android_files\image-20220302170001757.png)
 
 如果SD卡不存在，则使用内部存储
 
 step2 写入数据
 
-![image-20220302170650942](D:\notes\codes\android\Android_files\image-20220302170650942.png)
+![image-20220302170650942](Android_files\image-20220302170650942.png)
 
 step3 读取数据
 
-![image-20220302170714341](D:\notes\codes\android\Android_files\image-20220302170714341.png)
+![image-20220302170714341](Android_files\image-20220302170714341.png)
 
 ### 问题
 
@@ -2626,7 +2713,7 @@ step3 读取数据
 2. 检查权限是否处理正确
 3. 确认设备是否有SDCard
 
-![image-20220302171102245](D:\notes\codes\android\Android_files\image-20220302171102245.png)
+![image-20220302171102245](Android_files\image-20220302171102245.png)
 
 #### DDMS中data、SDCard目录无法展开
 
@@ -2704,7 +2791,7 @@ sink.close();
 
 SQLite数据库是个轻量级的数据库，本质上是个二进制文件。
 
-![image-20220303170613410](D:\notes\codes\android\Android_files\image-20220303170613410.png)
+![image-20220303170613410](Android_files\image-20220303170613410.png)
 
 **SQLiteExpert工具**
 
@@ -2925,7 +3012,97 @@ handler接收到的消息可能是异步的,需要处理的时候上下文已经
 
 **handler引入包**
 
-android.os.Handler
+## Thread，Looper和Handler的关系
+
+与Windows系统一样，Android也是消息驱动型的系统。引用一下消息驱动机制的四要素：
+
+接收消息的“消息队列”
+阻塞式地从消息队列中接收消息并进行处理的“线程”
+可发送的“消息的格式”
+“消息发送函数”
+与之对应，Android中的实现对应了
+
+接收消息的“消息队列” ——【MessageQueue】
+阻塞式地从消息队列中接收消息并进行处理的“线程” ——【Thread+Looper】
+可发送的“消息的格式” ——【Message】
+“消息发送函数”——【Handler的post和sendMessage】
+一个Looper类似一个消息泵。它本身是一个死循环，不断地从MessageQueue中提取Message或者Runnable。而Handler可以看做是一个Looper的暴露接口，向外部暴露一些事件，并暴露sendMessage()和post()函数。
+
+在安卓中，除了UI线程/主线程以外，普通的线程(先不提HandlerThread)是不自带Looper的。想要通过UI线程与子线程通信需要在子线程内自己实现一个Looper。开启Looper分三步走：
+
+判定是否已有Looper并Looper.prepare()
+做一些准备工作(如暴露handler等)
+调用Looper.loop()，线程进入阻塞态
+由于每一个线程内最多只可以有一个Looper，所以一定要在Looper.prepare()之前做好判定，否则会抛出java.lang.RuntimeException: Only one Looper may be created per thread。为了获取Looper的信息可以使用两个方法：
+
+Looper.myLooper()
+Looper.getMainLooper()
+Looper.myLooper()获取当前线程绑定的Looper，如果没有返回null。Looper.getMainLooper()返回主线程的Looper,这样就可以方便的与主线程通信。注意：在Thread的构造函数中调用Looper.myLooper只会得到主线程的Looper，因为此时新线程还未构造好
+
+下面给一段代码，通过Thread，Looper和Handler实现线程通信：
+
+MainActivity.java
+
+    public class MainActivity extends Activity {
+        public static final String TAG = "Main Acticity";
+        Button btn = null;
+        Button btn2 = null;
+        Handler handler = null;
+        MyHandlerThread mHandlerThread = null;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        btn = (Button)findViewById(R.id.button);
+        btn2 = (Button)findViewById(R.id.button2);
+        Log.d("MainActivity.myLooper()", Looper.myLooper().toString());
+        Log.d("MainActivity.MainLooper", Looper.getMainLooper().toString());
+
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mHandlerThread = new MyHandlerThread("onStartHandlerThread");
+                Log.d(TAG, "创建myHandlerThread对象");
+                mHandlerThread.start();
+                Log.d(TAG, "start一个Thread");
+            }
+        });
+    
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mHandlerThread.mHandler != null){
+                    Message msg = new Message();
+                    msg.what = 1;
+                    mHandlerThread.mHandler.sendMessage(msg);
+                }
+    
+            }
+        });
+    }
+}
+MyHandlerThread.java
+public class MyHandlerThread extends Thread {
+    public static final String TAG = "MyHT";
+
+    public Handler mHandler = null;
+    
+    @Override
+    public void run() {
+        Log.d(TAG, "进入Thread的run");
+        Looper.prepare();
+        Looper.prepare();
+        mHandler = new Handler(Looper.myLooper()){
+            @Override
+            public void handleMessage(Message msg){
+                Log.d(TAG, "获得了message");
+                super.handleMessage(msg);
+            }
+        };
+        Looper.loop();
+    }}
+
 
 # 蓝牙
 
@@ -3528,6 +3705,166 @@ Picasso不支持GIF图片加载
 DaoMaster---->数据库连接对象
 DaoSession--->由连接生成的会话
 
+# 动画
+
+## 综述
+
+Android中的动画分为补间动画(Tweened Animation)和逐帧动画(Frame-by-Frame Animation)。没有意外的，补间动画是在几个关键的节点对对象进行描述又系统进行填充。而逐帧动画是在固定的时间点以一定速率播放一系列的drawable资源。下面对两种动画进行分别简要说明。
+
+## 补间动画
+
+补间动画分为如下种
+
+- Alpha 淡入淡出
+- Scale 缩放
+- Rotate 旋转
+- Translate 平移
+
+这些动画是可以同时进行和顺次进行的。需要用到AnimationSet来实现。调用AnimationSet.addAnimation()即可。 实现方法举例:
+
+```java
+(Button)btn = (Button)findViewById(...);
+AnimationSet as = new AnimationSet(false);//新建AnimationSet实例
+TranslateAnimation ta = new TranslateAnimation(//新建平移动画实例，在构造函数中传入平移的始末位置
+        Animation.RELATIVE_TO_SELF, 0f,
+        Animation.RELATIVE_TO_SELF, 0.3f,
+        Animation.RELATIVE_TO_SELF, 0f,
+        Animation.RELATIVE_TO_SELF, 0.3f);
+ta.setStartOffset(0);//AnimationSet被触发后立刻执行
+ta.setInterpolator(new AccelerateDecelerateInterpolator());//加入一个加速减速插值器
+ta.setFillAfter(true);//动画结束后保持该状态
+ta.setDuration(700);//设置动画时长
+
+ScaleAnimation sa = new ScaleAnimation(1f, 0.1f, 1f, 0.1f,//构造一个缩放动画实例，构造函数参数传入百分比和缩放中心
+        ScaleAnimation.RELATIVE_TO_SELF, 0.5f, 
+        ScaleAnimation.RELATIVE_TO_SELF, 0.5f);
+sa.setInterpolator(new AccelerateDecelerateInterpolator());//加入一个加速减速插值器
+sa.setDuration(700);//设置时长
+sa.setFillAfter(true);//动画结束后保持该状态
+sa.setStartOffset(650);//AnimationSet触发后650ms启动动画
+
+AlphaAnimation aa = new AlphaAnimation(1f, 0f);//构造一个淡出动画，从100%变为0%
+aa.setDuration(700);//设置时长
+aa.setStartOffset(650);//AnimationSet触发后650ms启动动画
+aa.setFillAfter(true);//动画结束后保持该状态
+
+as.addAnimation(ta);
+as.addAnimation(sa);
+as.addAnimation(aa);//将动画放入AnimationSet中
+
+btn.setOnClickListener(new OnClickListener(){
+  public void onClick(View view){
+    btn.startAnimation(as);//触发动画
+  }
+}
+```
+
+该段代码实现了先平移，然后边缩小边淡出。
+
+具体的代码实现需要注意各个参数所代表的含义，比较琐碎，建议阅读文档熟悉。在这里不做过多讲解，文档说的已经很清楚了。
+文档连接http://developer.android.com/reference/android/view/animation/Animation.html
+
+### 逐帧动画
+
+这一部分只涉及非常基础的知识。逐帧动画适用于更高级的动画效果，原因可想而知。我们可以将每帧图片资源放到drawable下然后代码中canvas.drawBitmap(Bitmap, Matrix, Paint)进行动画播放，但这样就将动画资源与代码耦合，如果哪天美工说我要换一下效果就呵呵了。因此我们要做的是将资源等信息放入配置文件然后教会美工怎么改配置文件，这样才有时间去刷知乎而不被打扰^_^。 大致分为两种方法：
+
+- 每一帧是一张png图片中
+- 所有动画帧都存在一张png图片中
+
+当然还有的专门的游戏公司有自己的动画编辑器，这里不加说明。
+
+#### 每一帧是一张png
+
+说的就是这个效果：
+
+![每一帧是一张png例图](E:\Libraries\notes\se\android\Android_files\3.png)
+
+在animation1.xml文件中进行如下配置：
+
+```java
+?xml version="1.0" encoding="utf-8"?>
+<animation-list
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:oneshot="true"<!-- true表示只播放一次，false表示循环播放 -->
+  >
+    <item android:drawable="@drawable/hero_down_a" android:duration="70"></item>
+    <item android:drawable="@drawable/hero_down_b" android:duration="70"></item>
+    <item android:drawable="@drawable/hero_down_c" android:duration="70"></item>
+    <item android:drawable="@drawable/hero_down_d" android:duration="70"></item>
+</animation-list>
+```
+
+在JAVA文件中我们进行如下加载：
+
+```
+ImageView animationIV;
+AnimationDrawable animationDrawable;
+
+animationIV.setImageResource(R.drawable.animation1);
+animationDrawable = (AnimationDrawable) animationIV.getDrawable();
+animationDrawable.start();
+```
+
+注意动画的播放是按照xml文件中的顺序顺次播放，如果要考虑到循环播放的时候应该写两个xml一个正向一个反向才能很好地循环播放。
+
+#### 所有动画在一张png中
+
+说的就是这个效果：
+
+![所有动画放在一张png中](E:\Libraries\notes\se\android\Android_files\4.png) 
+
+animation.xml的配置：
+
+```
+<key>010001.png</key>
+<dict>
+    <key>frame</key>
+    <string>{{378, 438}, {374, 144}}</string>
+    <key>offset</key>
+    <string>{-2, 7}</string>
+    <key>sourceColorRect</key>
+    <string>{{61, 51}, {374, 144}}</string>
+    <key>sourceSize</key>
+    <string>{500, 260}</string>
+</dict>
+<key>010002.png</key>
+<dict>
+    <key>frame</key>
+    <string>{{384, 294}, {380, 142}}</string>
+    <key>offset</key>
+    <string>{1, 7}</string>
+    <key>sourceColorRect</key>
+    <key>rotate</key>
+    <false/>
+    <string>{{61, 52}, {380, 142}}</string>
+    <key>sourceSize</key>
+    <string>{500, 260}</string>
+</dict>
+…
+```
+
+其中：
+
+- frame 指定在原图中截取的框大小；
+- offeset 指定原图中心与截图中心偏移的向量；
+- rotate若为true顺时针旋转90°；
+- sourceColorRect 截取原图透明部分的大小
+- sourceSize 原图大小
+
+JAVA的加载方式与第一种方法相同。
+
+在使用过程中一定要注意内存资源的回收和drawable的压缩，一不小心可能爆掉。
+
+本文参考博闻：
+
+- [.plist中各个key的含义](http://blog.csdn.net/laogong5i0/article/details/9293763)
+- [Android游戏中的动画制作](http://www.embedu.org/Column/Column401.htm)
+- [Android研究院值游戏开发](http://www.xuanyusong.com/archives/242)
+- [用Animation-list实现逐帧动画](http://www.open-open.com/lib/view/open1344504946405.html)
+
+最后放一张demo:
+![动画demo](E:\Libraries\notes\se\android\Android_files\1.gif)
+
 # 其他
 
 ## 时间
@@ -3553,3 +3890,17 @@ String date = df.format(new Date());// new Date()为获取当前系统时间，�
 ## 二维码扫描
 
 https://www.jianshu.com/p/b85812b6f7c1
+
+## 推送
+
+常用推送平台：
+
+谷歌云通讯（限制访问）、极光推送、友盟推送、个推
+
+集成极光推送：
+
+1.创建极光账号
+
+2.创建应用并开通推送功能
+
+3.集成SDK
