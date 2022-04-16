@@ -1709,6 +1709,10 @@ android:foreground="?android:attr/selectableItemBackground"//设置点击了之�
 
 https://www.jianshu.com/p/b105019028b6
 
+### WebView
+
+基于webkit内核（Chromium)
+
 ## Fragment
 
 **引入**
