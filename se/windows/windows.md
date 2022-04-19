@@ -298,3 +298,18 @@ step4 显示及更新窗口
 ![image-20220329090258210](E:\Libraries\notes\se\windows\windows_files\image-20220329090258210.png)
 
 ![image-20220329091457096](E:\Libraries\notes\se\windows\windows_files\image-20220329091457096.png)
+
+
+
+
+
+
+
+
+
+窗口过程函数WndProc永远不必改变，每当有新的要处理的消息，只要在_messageEntries[]数据中加上新的数组元素，并针对新消息写新的处理函数就OK了。
+
+
+
+# 第四讲 绘图与文本
+
