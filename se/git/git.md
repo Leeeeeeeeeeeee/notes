@@ -48,7 +48,7 @@ There are changes in both branches, but they conflict. In this case, the conflic
 
 <u>重定向分支指针</u>
 
-![image-20220315111450866](D:\Libraries\notes\软件工程\git\imgs\image-20220315111450866.png)
+![image-20220315111450866](imgs\image-20220315111450866.png)
 
 git rebase
 
@@ -70,11 +70,11 @@ git revert
 
 <u>选一个分支中一个或者几个commit来应用提交到另外一个分支</u>
 
-![image-20220315112009109](D:\Libraries\notes\软件工程\git\imgs\image-20220315112009109.png)
+![image-20220315112009109](imgs\image-20220315112009109.png)
 
 ## Revert 
 
-![image-20220315112501885](D:\Libraries\notes\软件工程\git\imgs\image-20220315112501885.png)
+![image-20220315112501885](imgs\image-20220315112501885.png)
 
 # git命令
 
