@@ -561,6 +561,16 @@ LOAD_DEFAULT:(默认)根据cache-control决定是否从网络获取
 
 LOAD_NO_CACHE:永远不使用缓存，只从网络获取
 
+### WebClient
+
+WebResourceResponse shouldInterceptRequest(WebViewview,String url):进行资源请求的时候回调
+
+void onPageStarted(WebView view, String url, Bitmap favicon)∶网页已经开始加载的时候回调
+
+void onLoadResource(WebView view, String url):加载网页资源之前回调
+
+void onPageFinished(WebView view, String url):网页加载完成的时候回调
+
 # 常用
 
 ## 添加水平线和竖直线
