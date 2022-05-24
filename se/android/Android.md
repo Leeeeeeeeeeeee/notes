@@ -529,13 +529,37 @@ Application对象能接收系统回调，自动知悉系统环境变化> Applica
 
 ![image-20220520195544008](E:\notes\se\android\Android_files\image-20220520195544008.png)
 
+其它应用中使用服务
+
+![image-20220524155350511](E:\notes\se\android\Android_files\image-20220524155350511.png)
+
+![image-20220524155730915](E:\notes\se\android\Android_files\image-20220524155730915.png)
+
 # AIDL
-
-
 
 全称：Android Interface definition language
 
 作用：进程间通信接口
+
+使用：
+
+1.创建AIDL文件
+
+![image-20220524160206554](E:\notes\se\android\Android_files\image-20220524160206554.png)
+
+2.自动生成对应的Java文件
+
+![image-20220524161459959](E:\notes\se\android\Android_files\image-20220524161459959.png)
+
+![image-20220524210518733](E:\notes\se\android\Android_files\image-20220524210518733.png)
+
+3.在service的onBind()方法中返回IMyAidInterface.Stub()
+
+![image-20220524210836804](E:\notes\se\android\Android_files\image-20220524210836804.png)
+
+4.在Activity的ServiceConnection里获得接口对象
+
+![image-20220524211525989](E:\notes\se\android\Android_files\image-20220524211525989.png)
 
 # 视图
 
