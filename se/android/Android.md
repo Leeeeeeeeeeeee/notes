@@ -3088,6 +3088,20 @@ call.enqueue( callback) ;
 
 **Response** 
 
+## 使用UDP通信
+
+![image-20220605105343576](E:\notes\se\android\Android_files\image-20220605105343576.png)
+
+## 使用TCP通信
+
+![image-20220605105553748](E:\notes\se\android\Android_files\image-20220605105553748.png)
+
+## HTTPS
+
+提供加密方案，更安全
+
+![image-20220605105710571](E:\notes\se\android\Android_files\image-20220605105710571.png)
+
 # Handler
 
 **应用场景**
