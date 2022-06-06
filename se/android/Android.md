@@ -3838,6 +3838,8 @@ Android中的动画分为补间动画(Tweened Animation)和逐帧动画(Frame-by
 
 ## 补间动画
 
+![image-20220606163933561](E:\notes\se\android\Android_files\image-20220606163933561.png)
+
 补间动画分为如下种
 
 - Alpha 淡入淡出
@@ -3889,7 +3891,69 @@ btn.setOnClickListener(new OnClickListener(){
 具体的代码实现需要注意各个参数所代表的含义，比较琐碎，建议阅读文档熟悉。在这里不做过多讲解，文档说的已经很清楚了。
 文档连接http://developer.android.com/reference/android/view/animation/Animation.html
 
-### 逐帧动画
+### 视图动画
+
+#### Scale缩放动画
+
+![image-20220606164506669](E:\notes\se\android\Android_files\image-20220606164506669.png)
+
+set标签属性：
+
+duration:持续时间
+
+fillAfter:动画完成后保持完成状态
+
+pivotX pivotY 拉伸基准点
+
+![image-20220606164200312](E:\notes\se\android\Android_files\image-20220606164200312.png)
+
+#### Translate位移动画
+
+![image-20220606164905182](E:\notes\se\android\Android_files\image-20220606164905182.png)
+
+![image-20220606175224670](E:\notes\se\android\Android_files\image-20220606175224670.png)
+
+p代表父控件
+
+#### Rotate旋转动画
+
+![image-20220606175807947](E:\notes\se\android\Android_files\image-20220606175807947.png)
+
+![image-20220606175914862](E:\notes\se\android\Android_files\image-20220606175914862.png)
+
+repeatCount重复次数 ，可为infinite代表无限重复
+
+repeatMode默认为restart，重复开始，可为reverse 原路返回
+
+#### 复合动画
+
+利用<set>
+
+![image-20220606180349663](E:\notes\se\android\Android_files\image-20220606180349663.png)
+
+![image-20220606180405873](E:\notes\se\android\Android_files\image-20220606180405873.png)
+
+startOffset 开始等待时长
+
+#### 插值器Interpolator
+
+![image-20220606180835091](E:\notes\se\android\Android_files\image-20220606180835091.png)
+
+## 属性动画
+
+![image-20220606190146313](E:\notes\se\android\Android_files\image-20220606190146313.png)
+
+也可以生成浮点数
+
+![image-20220606190412175](E:\notes\se\android\Android_files\image-20220606190412175.png)
+
+animatorSet
+
+![image-20220606190814358](E:\notes\se\android\Android_files\image-20220606190814358.png)
+
+![image-20220606190903482](E:\notes\se\android\Android_files\image-20220606190903482.png)
+
+## 逐帧动画
 
 这一部分只涉及非常基础的知识。逐帧动画适用于更高级的动画效果，原因可想而知。我们可以将每帧图片资源放到drawable下然后代码中canvas.drawBitmap(Bitmap, Matrix, Paint)进行动画播放，但这样就将动画资源与代码耦合，如果哪天美工说我要换一下效果就呵呵了。因此我们要做的是将资源等信息放入配置文件然后教会美工怎么改配置文件，这样才有时间去刷知乎而不被打扰^_^。 大致分为两种方法：
 
@@ -3898,13 +3962,13 @@ btn.setOnClickListener(new OnClickListener(){
 
 当然还有的专门的游戏公司有自己的动画编辑器，这里不加说明。
 
-#### 每一帧是一张png
+### 每一帧是一张png
 
 说的就是这个效果：
 
-![每一帧是一张png例图](E:\Libraries\notes\se\android\Android_files\3.png)
+![每一帧是一张png例图](Android_files\3.png)
 
-在animation1.xml文件中进行如下配置：
+在animation1.xml文件中进行如下配置：（一个item就是一帧）
 
 ```java
 ?xml version="1.0" encoding="utf-8"?>
@@ -3932,11 +3996,19 @@ animationDrawable.start();
 
 注意动画的播放是按照xml文件中的顺序顺次播放，如果要考虑到循环播放的时候应该写两个xml一个正向一个反向才能很好地循环播放。
 
-#### 所有动画在一张png中
+使用方式2
+
+![image-20220606163541107](E:\notes\se\android\Android_files\image-20220606163541107.png)
+
+![image-20220606163554093](E:\notes\se\android\Android_files\image-20220606163554093.png)
+
+![image-20220606163625964](E:\notes\se\android\Android_files\image-20220606163625964.png)
+
+### 所有动画在一张png中
 
 说的就是这个效果：
 
-![所有动画放在一张png中](E:\Libraries\notes\se\android\Android_files\4.png) 
+![所有动画放在一张png中](Android_files\4.png) 
 
 animation.xml的配置：
 
@@ -3988,7 +4060,9 @@ JAVA的加载方式与第一种方法相同。
 - [用Animation-list实现逐帧动画](http://www.open-open.com/lib/view/open1344504946405.html)
 
 最后放一张demo:
-![动画demo](E:\Libraries\notes\se\android\Android_files\1.gif)
+![动画demo](Android_files\1.gif)
+
+
 
 # 其他
 
