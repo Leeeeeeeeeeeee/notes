@@ -849,7 +849,7 @@ onLayout() 决定 View 在 ViewGroup 中的位置
 
 onDraw() 绘制 View
 
-**onMeasure()**
+##### **onMeasure()**
 
 视图大小的测量过程，是由父视图、布局文件、以及视图本身共同完成的。
 
@@ -859,7 +859,7 @@ onDraw() 绘制 View
 
 - EXACTLY 父视图希望子视图的大小应该由 specSize 来决定
 
-- AT MOST 子视图最大只能是 specSize 中指定的大小
+- AT_MOST 子视图最大只能是 specSize 中指定的大小
 
 布局文件中指定视图的大小
 
@@ -869,11 +869,11 @@ onDraw() 绘制 View
 
 视图本身最终决定大小
 
-**onLayout()**
+##### **onLayout()**
 
 根据测量出来的（onMeasure()）宽度和高度确定视图的位置。关键方法：public void layout (int l, int t, int r, int b) 方法接收左、上、右、下的坐标。
 
-**onDraw()**
+##### **onDraw()**
 
 完成测量（onMeasure()）和布局操作（onLayout()）之后，创建 Canvas 对象绘制视图。
 
@@ -1013,7 +1013,15 @@ setTypeface(Typeface typeface);
 //字体样式
 ```
 
-#### 自定义XML标签属性、取值等
+![image-20220608164537262](E:\notes\se\android\Android_files\image-20220608164537262.png)
+
+#### 状态的存储与恢复
+
+ ![image-20220608105151749](E:\notes\se\android\Android_files\image-20220608105151749.png)
+
+需要视图设置id
+
+#### 自定义属性
 
 ①在资源文件中配置标签属性
 
@@ -1094,6 +1102,8 @@ public class CustomerView extends AppCompatImageView {
 }
 从typeArray数组中取值的参数，其中参数命门规则为R.styleable.控件名_属性名
 ```
+
+  只会获取用户设定的值，不会造成成员变量的覆盖![image-20220608102832255](E:\notes\se\android\Android_files\image-20220608102832255.png)
 
 
 
@@ -2920,6 +2930,8 @@ Android四大组件之一，为存储和获取数据提供统一的接口。可�
 
 3.使用ContentResolver
 
+ 	cr = getContentResolver();
+
 ![image-20220604125735433](E:\notes\se\android\Android_files\image-20220604125735433.png)
 
 ![image-20220604131125383](E:\notes\se\android\Android_files\image-20220604131125383.png)
@@ -3939,7 +3951,7 @@ startOffset 开始等待时长
 
 ![image-20220606180835091](E:\notes\se\android\Android_files\image-20220606180835091.png)
 
-## 属性动画
+### 属性动画
 
 ![image-20220606190146313](E:\notes\se\android\Android_files\image-20220606190146313.png)
 
