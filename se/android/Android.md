@@ -13,6 +13,10 @@ NDK：Native Development Kit，Android原生工具开发包
 
 ### 安卓系统架构
 
+## API级别和版本号
+
+https://source.android.com/setup/start/build-numbers
+
 # Android系统架构
 
 总的来说，Android的系统体系结构分为**四层**，自顶向下分别是：
