@@ -269,7 +269,13 @@ Application对象能接收系统回调，自动知悉系统环境变化> Applica
 
 如果单例能实现需求就用单例
 
-# Service
+# 四大组件
+
+Android四大组件其实就是在AndroidManifest.xml里的在application下记录的标签
+
+android:exported属性代表这个组件能否被其他应用调用，true时可以，false不行；当有intent-filter时默认为true，没有时默认为false
+
+## Service
 
 没有界面的activity
 
@@ -277,13 +283,13 @@ Application对象能接收系统回调，自动知悉系统环境变化> Applica
 
 不受activity生命周期的影响
 
-![image-20220520195544008](E:\notes\se\android\Android_files\image-20220520195544008.png)
+![image-20220520195544008](Android_files\image-20220520195544008.png)
 
 其它应用中使用服务
 
-![image-20220524155350511](E:\notes\se\android\Android_files\image-20220524155350511.png)
+![image-20220524155350511](Android_files\image-20220524155350511.png)
 
-![image-20220524155730915](E:\notes\se\android\Android_files\image-20220524155730915.png)
+![image-20220524155730915](Android_files\image-20220524155730915.png)
 
 # AIDL
 

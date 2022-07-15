@@ -8,7 +8,7 @@ step2 在manifest中注册
 
 也可以在manifest文件中注册
 
-tips activity内部有intent-filter代表主入口,可以让多个activity都有主入口的intent-filter,系统中会有两个入口指向同一个app![0.8315151484658686.png](E:/notes/se/android/Android_files/0.8315151484658686.png)
+tips activity内部有intent-filter代表主入口,可以让多个activity都有主入口的intent-filter,系统中会有两个入口指向同一个app![0.8315151484658686.png](Android_files/0.8315151484658686.png)
 
 # 四种启动模式
 
@@ -16,7 +16,7 @@ tips activity内部有intent-filter代表主入口,可以让多个activity都有
 
 method1 在manifest中设置launchMode属性
 
-method2 代码设置![0.7581949137520234.png](E:/notes/se/android/Android_files/0.7581949137520234.png)
+method2 代码设置![0.7581949137520234.png](Android_files/0.7581949137520234.png)
 
 - CLEAR_TASK代表清除栈
 - CLEAR_TOP代表清除栈顶
