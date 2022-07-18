@@ -20,3 +20,16 @@ Activity Context用于：
 一边能使用Application Context的场景尽量使用Application Context，只能使用Activity Context的场景一般是与UI相关的。
 
 getBaseContext()是 ContextWrapper中的方法，返回由构造函数指定或setBaseContext()设置的上下文。
+
+
+
+# PackageManager
+
+功能
+
+- 安装，卸载应用 
+- 查询permission相关信息 
+- 查询Application相关信息(application，activity，receiver，service，provider及相应属性等） 
+- 查询已安装应用 
+- 增加，删除permission 
+- 清除用户数据、缓存，代码段等 

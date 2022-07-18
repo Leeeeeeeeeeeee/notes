@@ -267,3 +267,25 @@ AppcompaActivity相对于Activity的主要的两点变化；
 2：theme主题只能用android:theme=”@style/AppTheme （appTheme主题或者其子类），而不能用android:style。 否则会提示错误： Caused by: java.lang.IllegalStateException: You need to use a Theme.AppCompat theme (or descendant) with this activity.
 
 https://blog.csdn.net/today_work/article/details/79300181
+
+## onNewIntent()的使用
+
+前提:ActivityA已经启动过,处于当前应用的Activity任务栈中;
+
+当ActivityA的LaunchMode为Standard时：
+
+由于每次启动ActivityA都是启动新的实例，和原来启动的没关系，所以不会调用原来ActivityA的onNewIntent方法
+
+当ActivityA的LaunchMode为SingleTop时：
+
+如果ActivityA在栈顶,且现在要再启动ActivityA，这时会调用onNewIntent()方法 ，生命周期顺序为：
+
+onCreate—>onStart—>onResume—onPause—>onNewIntent—>onResume
+
+当ActivityA的LaunchMode为SingleInstance,SingleTask：
+
+如果ActivityA已经在任务栈中，再次启动ActivityA，那么此时会调用onNewIntent()方法，生命周期调用顺序为：
+
+onPause—>跳转其它页面—>onCreate—>onStart—>onResume—onPause—>跳转A—>onNewIntent—>onRestart—>onStart—>onResume
+
+总的来说，只对SingleTop(且位于栈顶)，SingleTask和SingleInstance(且已经在任务栈中存在实例)的情况下，再次启动它们时才会调用，即只对startActivity有效，对仅仅从后台切换到前台而不再次启动的情形，不会触发onNewIntent。
