@@ -147,9 +147,9 @@ File > Project Structure
 
 **打开模块设置**
 
-![image-20220321101803316](E:\Libraries\notes\se\android\Android_files\image-20220321101803316.png)
+![image-20220321101803316](Android_files\image-20220321101803316.png)
 
-![image-20220321102422691](E:\Libraries\notes\se\android\Android_files\image-20220321102422691.png)
+![image-20220321102422691](Android_files\image-20220321102422691.png)
 
 **Gradle SDK Java AndroidStudio的历史版本查看下载**
 
@@ -179,61 +179,7 @@ step3 检查权限请求返回代码
 
 https://juejin.cn/post/6898234461361307655
 
-# Intent
 
-Intent是一种运行时绑定（runtime binding)机制，它能在程序运行的过程中连接两个不同的组件。通过Intent，程序可以向Android表达某种请求或者意愿，Android会根据意愿的内容选择适当的组件来响应。
-
-**组成：**
-
-- component(组件)：目的组件
-- action（动作）：用来表现意图的行动
-- category（类别）：用来表现动作的类别，或范畴
-- data（数据）：表示与动作要操纵的数据
-- type（数据类型）：对于data范例的描写
-- extras（扩展信息）：扩展信息
-- Flags（标志位）：期望这个意图的运行模式
-
-Android官方定义Intent 是用于通过描述某个"意图"对象中执行的简单操作（如“查看地图”或“拍摄照片”）来启动另一应用中的某个 Activity。 这种 Intent 称作"隐式"Intent，因为它并不指定要启动的应用组件，而是指定一项"操作"并提供执行该操作所需的一些数据。
-
-当调用 startActivity() 或 startActivityForResult()并向其传递隐式 Intent 时，系统会将Intent解析为可处理该 Intent 的应用并启动其对应的 Activity。 如果有多个应用可处理 Intent，系统会为用户显示一个对话框，供其选择要使用的应用。
-
-注意：如果设备上没有可接收隐式 Intent 的应用，应用将在调用 startActivity() 时崩溃。如需事先验证是否存在可接收 Intent 的应用，需要对 Intent对象调用 resolveActivity()。如果结果为非空，则至少有一个应用能够处理该 Intent，并且可以安全调用 startActivity()，如果结果为空，则不应使用该 Intent。如有可能，应停用调用该 Intent 的功能。
-
-注意：隐式Intent与显式Intent的区别：隐式Intent不指定意图的主体。
-
-**常见使用：**https://www.jianshu.com/p/ac6efbc45a3e
-
-1.相机
-
-2.打开特定设置屏幕
-
-3.撰写带附件的短信/彩信Broadcast
-
-**注册**
-
-静态注册：broadcast receiver广播接收者的注册分静态注册（在AndroidManifest文件中进行配置）
-
-![image-20220310172539667](Android_files\image-20220310172759002.png)
-
-![image-20220310172917650](Android_files\image-20220310172917650.png)
-
-动态注册：通过代码动态创建并以调用Context.registerReceiver()的方式注册至系统
-
-![image-20220310173433554](Android_files\image-20220310173433554.png)
-
-![image-20220310173511770](Android_files\image-20220310173511770.png)
-
-新建广播接收器并注册广播
-
-![image-20220315171629565](Android_files\image-20220315171629565.png)
-
-发送广播
-
-![image-20220315171840036](Android_files\image-20220315171840036.png)
-
-在广播接收器中接受广播
-
-![image-20220315171848965](Android_files\image-20220315171848965.png)
 
 # Application
 
