@@ -30,15 +30,15 @@ Android官方定义Intent 是用于通过描述某个"意图"对象中执行的�
 
 静态注册：broadcast receiver广播接收者的注册分静态注册（在AndroidManifest文件中进行配置）
 
-![image-20220310172539667](F:/Notes/se/android/Android_files/image-20220310172759002.png)
+![image-20220310172539667](Android_files/image-20220310172759002.png)
 
-![image-20220310172917650](F:/Notes/se/android/Android_files/image-20220310172917650.png)
+![image-20220310172917650](Android_files/image-20220310172917650.png)
 
 动态注册：通过代码动态创建并以调用Context.registerReceiver()的方式注册至系统
 
-![image-20220310173433554](F:/Notes/se/android/Android_files/image-20220310173433554.png)
+![image-20220310173433554](Android_files/image-20220310173433554.png)
 
-![image-20220310173511770](F:/Notes/se/android/Android_files/image-20220310173511770.png)
+![image-20220310173511770](Android_files/image-20220310173511770.png)
 
 新建广播接收器并注册广播
 
@@ -94,6 +94,280 @@ B以A的权限和身份发送了这个Intent
 关于PendingIntent的使用场景主要用于闹钟、通知、桌面部件。
 
 大体的原理是: A应用希望让B应用帮忙触发一个行为，这是跨应用的通信，需要 Android 系统作为中间人，这里的中间人就是 ActivityManager。 A应用创建建 PendingIntent，在创建 PendingIntent 的过程中，向 ActivityManager 注册了这个 PendingIntent，所以，即使A应用死了，当它再次苏醒时，只要提供相同的参数，还是可以获取到之前那个 PendingIntent 的。当 A 将 PendingIntent 调用系统 API 比如 AlarmManager.set()，实际是将权限给了B应用，这时候， B应用可以根据参数信息，来从 ActivityManager 获取到 A 设置的 PendingIntent
+
+# 七大属性
+
+## ComponentName
+
+指定了ComponentName属性的Intent已经明确了它将要启动哪个组件，因此这种Intent被称为显式Intent，没有指定ComponentName属性的Intent被称为隐式Intent。隐式Intent没有明确要启动哪个组件，应用会根据Intent指定的规则去启动符合条件的组件。
+```java
+Intent intent = new Intent();
+ComponentName cName = new ComponentName(MainActivity.this,NextActivity.class);
+intent.setComponent(cName);
+startActivity(intent);
+ 
+//实际上，以上的写法都被简化为以下写法：
+Intent intent = new Intent(MainActivity.this,NextActivity.class);
+        startActivity(intent);
+ 
+//也就是说，平时我们最常用的Intent页面跳转的写法就调用的是显式Intent。
+ 
+ 
+此外，ComponentName属性可以实现一个app跳转到另一个app。
+ 
+Intent intent = new Intent();
+   ComponentName cName = new ComponentName(
+"com.steven.testasyncloader.sqlitedata","com.steven.testasyncloader.sqlitedata.MainActivity");
+//其中两个参数的含义：第一个是要跳转到的app的包名，第二个参数是该包中的要跳转到app的页面的class
+   intent.setComponent(cName);
+   startActivity(intent);
+```
+
+## Action
+
+Action作为标识符，代表一个Intent，当一个Activity需要外部协助处理时，就会发出一个Intent，如果一个程序能完成相应功能，只要在intent-filter加上这个这个intent就可以了。
+
+通常，Action、Category属性结合使用，定义这两个属性都是在配置文件的<intent-filter>节点中。Intent通过定义Action属性（其实就是一段自定义的字符串），这样就可以把Intent与具体的某个Activity分离，实现了解耦。否则，每次跳转，都要写成类似new Intent(MainActivity.this,NextActivity.class)这样的形式，也就是说必须将要跳转的目标Activity的名字写出来，这样的编码其实是“硬编码”，并没有实现松耦合。调用Intent对象的setAction()方法实现页面跳转虽然略微复杂（需要在AndroidManifest.xml文件中配置），但是实现了解耦。
+
+常用的Action属性常量：
+
+- ACTION_MAIN：（android.intent.action.MAIN）Android程序入口//每个Android应用必须且只能包含一个此类型的Action声明。【如果设置多个，则哪个在前，执行哪个。】
+- ACTION_VIEW： （android.intent.action.VIEW） 显示指定数据。
+- ACTION_EDIT： （android.intent.action.EDIT） 编辑指定数据。      
+- ACTION_DIAL： （android.intent.action.DIAL） 显示拨号面板。      
+- ACTION_CALL： （android.intent.action.CALL） 直接呼叫Data中所带的号码。      
+- ACTION_ANSWER： （android.intent.action.ANSWER） 接听来电。      
+- ACTION_SEND： （android.intent.action.SEND） 向其他人发送数据（例如：彩信/email）。      
+- ACTION_SENDTO：  （android.intent.action.SENDTO） 向其他人发送短信。      
+- ACTION_SEARCH： （android.intent.action.SEARCH） 执行搜索。      
+- ACTION_GET_CONTENT： （android.intent.action.GET_CONTENT） 让用户选择数据，并返回所选数据。
+
+Intent利用Action属性中的ACTION_GET_CONTENT获取返回值：
+
+```java
+//选择图片 requestCode 返回的标识
+Intent intent = new Intent();
+intent.setAction(Intent. ACTION_GET_CONTENT );
+intent.setType( "image/*" );
+Intent wrapperIntent = Intent.createChooser(intent, null);
+startActivityForResult(wrapperIntent, requestCode);  
+ 
+ 
+//添加音频
+Intent intent = new Intent();
+intent.setAction(Intent. ACTION_GET_CONTENT );
+intent.setType( "video/*" );
+Intent wrapperIntent = Intent.createChooser(intent, null);
+startActivityForResult(wrapperIntent, requestCode);  
+ 
+ 
+//视频
+Intent intent = new Intent();
+intent.setAction(Intent. ACTION_GET_CONTENT );
+intent.setType( "video/*" );
+Intent wrapperIntent = Intent.createChooser(intent, null);
+startActivityForResult(wrapperIntent, requestCode);  
+ 
+ 
+//录音
+Intent intent = new Intent();
+intent.setAction(Intent. ACTION_GET_CONTENT );
+intent.setType( "audio/amr" );
+intent.setClassName("com.android.soundrecorder","com.android.soundrecorder.SoundRecorder");
+startActivityForResult(intent, requestCode);  
+```
+
+## Category
+
+Category表示Intent的种类，从android上启动Activity有多种方式，比如 程序列表、桌面图标、点击Home激活的桌面等等，Category则用来标识这些Activity的图标会出现在哪些启动的上下文环境里。
+
+Category属性为Action增加额外的附加类别信息。CATEGORY_LAUNCHER意味着在加载程序的时候Acticity出现在最上面，而CATEGORY_HOME表示页面跳转到HOME界面。
+
+实现页面跳转到HOME界面的代码：
+
+```java
+Intent intent = new Intent();
+intent.setAction(Intent.ACTION_MAIN);
+intent.addCategory(Intent.CATEGOTY_HOME);
+startActivity(intent);
+```
+
+常用Category属性常量
+
+- CATEGORY_DEFAULT： （android.intent.category.DEFAULT） Android系统中默认的执行方式，按照普通Activity的执行方式执行。      
+- CATEGORY_HOME： （android.intent.category.HOME） 设置该组件为Home Activity。    
+- CATEGORY_PREFERENCE： （android.intent.category.PREFERENCE） 设置该组件为Preference。      
+- CATEGORY_LAUNCHER： （android.intent.category.LAUNCHER） 设置该组件为在当前应用程序启动器中优先级最高的Activity，通常与入口ACTION_MAIN配合使用。     
+- CATEGORY_BROWSABLE： （android.intent.category.BROWSABLE） 设置该组件可以使用浏览器启动。
+
+## Data
+
+Data属性通常用于向Action属性提供操作的数据。Data属性的值是个Uri对象。
+
+Uri的格式如下：scheme://host:port/path
+
+系统内置的几个Data属性常量：
+
+- tel://：号码数据格式，后跟电话号码。      
+- mailto://：邮件数据格式，后跟邮件收件人地址。      
+- smsto://：短息数据格式，后跟短信接收号码。    
+- content://：内容数据格式，后跟需要读取的内容。      
+- file://：文件数据格式，后跟文件路径。      
+- market://search?q=pname:pkgname：市场数据格式，在Google Market里搜索包名为pkgname的应用。      
+- geo://latitude, longitude：经纬数据格式，在地图上显示经纬度所指定的位置。
+
+Intent利用Action属性和Data属性启动Android系统内置组件的代码：
+
+1. 拨打电话
+
+```java
+Intent intent=new Intent();
+intent.setAction(Intent.ACTION_CALL);  
+//intent.setAction("android.intent.action.CALL");  //以下各项皆如此，都有两种写法。
+intent.setData(Uri.parse("tel:1320010001"));
+startActivity(intent);
+ 
+//调用拨号面板：
+Intent intent=new Intent();
+intent.setAction(Intent.ACTION_DIAL);
+intent.setData(Uri.parse("tel:1320010001"));
+startActivity(intent);
+ 
+//调用拨号面板：
+Intent intent=new Intent();
+intent.setAction(Intent.ACTION_VIEW);
+intent.setData(Uri.parse("tel:1320010001"));
+startActivity(intent);
+```
+
+2. 利用Uri打开浏览器、打开地图等
+
+```java
+Uri uri = Uri.parse("http://www.google.com"); //浏览器
+Uri uri=Uri.parse("geo:39.899533,116.036476"); //打开地图定位
+Intent intent = new Intent();
+intent.setAction(Intent.ACTION_VIEW);
+intent.setData(uri);
+startActivity(intent);
+```
+
+## Type
+
+Type属性用于指定Data所指定的Uri对应的MIME类型。MIME只要符合“abc/xyz”这样的字符串格式即可。
+
+Intent利用Action、Data和Type属性启动Android系统内置组件的代码（播放视频）：
+
+```java
+Intent intent = new Intent();
+Uri uri = Uri.parse("file:///sdcard/media.mp4");
+intent.setAction(Intent.ACTION_VIEW);
+intent.setDataAndType(uri, "video/*");
+startActivity(intent);
+```
+
+## Extra
+
+Extras保存需要传递的额外数据。
+
+1. 通过intent.putExtra(键, 值)的形式在多个Activity之间进行数据交换
+2. 系统内置的几个Extra常量：
+
+- EXTRA_BCC：存放邮件密送人地址的字符串数组。      
+- EXTRA_CC：存放邮件抄送人地址的字符串数组。      
+- EXTRA_EMAIL：存放邮件地址的字符串数组。      
+- EXTRA_SUBJECT：存放邮件主题字符串。      
+- EXTRA_TEXT：存放邮件内容。      
+- EXTRA_KEY_EVENT：以KeyEvent对象方式存放触发Intent的按键。      
+- EXTRA_PHONE_NUMBER：存放调用ACTION_CALL时的电话号码。
+
+Intent利用Action、Data和Type、Extra属性启动Android系统内置组件的代码（调用发送短信的程序）：
+
+```java
+Intent  intent  = new Intent();
+intent.setAction(Intent.ACTION_VIEW);
+intent.setType("vnd.android-dir/mms-sms");
+intent.putExtra("sms_body", "信息内容...");
+startActivity(intent);
+ 
+//发送短信息
+Uri uri = Uri.parse("smsto:13200100001");
+Intent  intent  = new Intent();
+intent.setAction(Intent.  ACTION_SENDTO );
+intent.setData(uri);
+intent.putExtra("sms_body", "信息内容...");
+startActivity( intent );
+ 
+//发送彩信,设备会提示选择合适的程序发送
+Uri uri = Uri.parse("content://media/external/images/media/23"); //设备中的资源（图像或其他资源）
+Intent intent = new Intent();
+intent.setAction(Intent.  ACTION_SEND );
+intent.setType("image/png");
+intent.putExtra("sms_body", "内容");
+intent.putExtra(Intent.EXTRA_STREAM, uri);
+startActivity(it);
+```
+
+发送Email：
+
+```java
+Intent intent=new Intent();
+intent.setAction(Intent.  ACTION_SEND );
+String[] tos={"android1@163.com"};
+String[] ccs={"you@yahoo.com"};
+intent.putExtra(Intent.EXTRA_EMAIL, tos);
+intent.putExtra(Intent.EXTRA_CC, ccs);
+intent.putExtra(Intent.EXTRA_TEXT, "The email body text");
+intent.putExtra(Intent.EXTRA_SUBJECT, "The email subject text");
+intent.setType("message/rfc822");
+startActivity(Intent.createChooser(intent, "Choose Email Client"));
+ 
+Intent intent = new Intent(Intent.ACTION_SEND);
+String[] tos = { "mobileservice@ablesky.com" };
+intent.putExtra(Intent.EXTRA_EMAIL, tos);
+intent.putExtra(Intent.EXTRA_TEXT, getPhoneParameter());
+intent.putExtra(Intent.EXTRA_SUBJECT, "Android日志");
+intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(cacheDir));
+intent.setType("message/rfc882");
+intent.setType("plain/text");
+Intent.createChooser(intent, "请选择邮件发送软件");
+startActivity(intent);  
+
+intent.setAction(android.provider.Settings.ACTION_SETTINGS);
+```
+
+## Flags
+
+Intent可调用addFlags()方法来为Intent添加控制标记
+
+- FLAG_ACTIVITY_CLEAR_TOP:（效果同Activity  LaunchMode的singleTask）
+  如果在栈中已经有该Activity的实例，就重用该实例。重用时，会让该实例回到栈顶，因此在它上面的实例将会被移除栈。如果栈中不存在该实例，将会创建新的实例放入栈中。
+- FLAG_ACTIVITY_SINGLE_TOP:（效果同Activity  LaunchMode的singleTop）
+  如果在任务的栈顶正好存在该Activity的实例， 就重用该实例，而不会创建新的Activity对象。
+- FLAG_ACTIVITY_NEW_TASK: （效果类似Activity  LaunchMode的singleInstance）
+- FLAG_ACTIVITY_MULTIPLE_TASK
+- FLAG_ACTIVITY_BROUGHT_TO_FRONT
+- FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
+
+示例代码：
+
+```java
+Intent intent = new Intent(this, MainActivity.class);
+//将Activity栈中处于MainActivity主页面之上的Activity都弹出。
+intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+startActivity(intent);
+```
+
+如果依次启动了四个Activity：A、B、C、D。
+在D Activity里，跳到B Activity，同时希望D 和 C 都finish掉，可以在startActivity(intent)里的intent里添加flags标记，如下所示：
+
+```java
+Intent intent = new Intent(this, B.class);   
+intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);  
+startActivity(intent);
+```
+
+这样启动B Activity的同时，就会把D、C都finished掉。
+如果B Activity的launchMode是默认的“standard”，则B Activity会首先finished掉旧的B页面，再启动一个新的Activity B。  如果不想重新再创建一个新的B Activity，而是重用之前的B Activity，可以将B Activity的launchMode设置为“singleTask”。【特别需要注意的是：在部分手机中，如三星手机。即便是singleTask也会产生新的页面，而不是重用之前的页面。】
 
 # 注意
 
