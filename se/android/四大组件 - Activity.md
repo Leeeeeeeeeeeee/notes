@@ -4,11 +4,13 @@ step1 创建类继承自AppCompactActivity
 
 step2 在manifest中注册
 
-可以直接在类中利用快捷键进行注册![0.36557631299618.png](E:/notes/se/android/Android_files/0.36557631299618.png)
+可以直接在类中利用快捷键进行注册![0.36557631299618.png](Android_files/0.36557631299618.png)
 
 也可以在manifest文件中注册
 
-tips activity内部有intent-filter代表主入口,可以让多个activity都有主入口的intent-filter,系统中会有两个入口指向同一个app![0.8315151484658686.png](Android_files/0.8315151484658686.png)
+tips activity内部有intent-filter代表主入口,可以让多个activity都有主入口的intent-filter,系统中会有两个入口指向同一个app
+
+![0.8315151484658686.png](Android_files/0.8315151484658686.png)
 
 # 四种启动模式
 
@@ -22,36 +24,51 @@ method2 代码设置![0.7581949137520234.png](Android_files/0.7581949137520234.p
 - CLEAR_TOP代表清除栈顶
 - NEW_TASK代表创建新栈
 
-**标准启动模式(standard)(默认)**
+## **标准启动模式(standard)(默认)**
 
 ![0.541081863601735.png](Android_files/0.541081863601735.png)
 
-**顶部复用模式(singleTop)**
+每次激活Activity时都会创建Activity，并放入任务栈中。
 
-防止用户多次点击导致同一个activity在顶部多次重复
+如果启动此Activity的Intent中没有设置FLAG_ACTIVITY_NEW_TASK标志, 则这个Activity与启动他的Activity在同一个Task中。"launchMode"设置为"standard"的Activity可以被实例化多次, 可以在Task中的任何位置, 对于一个新的Intent请求就会实例化一次.
+
+使用场景：Standard 模式是系统默认的启动模式，一般我们 app 中大部分页面都是由该模式的页面构成的，比较常见的场景是：社交应用中，点击查看用户A信息->查看用户A粉丝->在粉丝中挑选查看用户B信息->查看用户A粉丝... 这种情况下一般我们需要保留用户操作 Activity 栈的页面所有执行顺序。
+
+## **顶部复用模式(singleTop)**
 ![0.8429975162329554.png](Android_files/0.8429975162329554.png)
 
-**单一任务模式(singleTask)**
+如果在任务的栈顶正好存在该Activity的实例， 就重用该实例，而不会创建新的Activity对象，不过它会调用onNewIntent()方法。如果栈顶部不存在就会创建新的实例并放入栈顶(即使栈中已经存在该Activity实例，只要不在栈顶，都会创建实例)。
+
+如果启动此Activity的Intent中没有设置FLAG_ACTIVITY_NEW_TASK标志, 则这个Activity与启动他的Activity在同一个Task中。"launchMode"设置为"singleTop"的Activity可以被实例化多次,  可以在Task中的任何位置, 对于一个新的Intent请求如果在Task栈顶, 则会用栈顶的Activity响应Intent请求,而不会重新实例化对象接收请求, 如果没有在栈顶, 则会实例化一个新的对象接收Intent请求.
+
+使用场景：防止用户多次点击导致同一个activity在顶部多次重复；SingleTop 模式一般常见于社交应用中的通知栏行为功能，例如：App 用户收到几条好友请求的推送消息，需要用户点击推送通知进入到请求者个人信息页，将信息页设置为 SingleTop 模式就可以增强复用性。
+
+## **单一任务模式(singleTask)**
 
 ![0.5683297211517564.png](Android_files/0.5683297211517564.png)
 
-**单例模式(singleInstance )**
+如果在栈中已经有该Activity的实例，就重用该实例(会调用实例的onNewIntent())。重用时，会让该实例回到栈顶，因此在它上面的实例将会被移除栈。如果栈中不存在该实例，将会创建新的实例放入栈中。
+
+和singleTop在名字上即可看出区别，即singleTop每次只检测当前栈顶的Activity是否是我们需要请求创建的，而singleTask则会检测栈中全部的Activity对象，从上向下，如果检测到是我们所请求的则会消灭此Activity对象上面的对象，直接把检测到的我们需要的Activity置为栈顶。
+
+"launchMode"设置为"singleTask"的Activity总是在栈底, 只能被实例化一次, 它允许其它Activity压入"singleTask"的Activity所在的Task栈,如果有新的Intent请求有此标志的Activity, 则系统会清除有此标志的Task栈中的全部Activity,并把此Activity显示出来。
+
+使用场景：SingleTask 模式一般用作应用的首页，例如浏览器主页，用户可能从多个应用启动浏览器，但主界面仅仅启动一次，其余情况都会走onNewIntent，并且会清空主界面上面的其他页面。
+
+## **单例模式(singleInstance )**
 
 ![0.9913129439221058.png](Android_files/0.9913129439221058.png)
 
-- Standard：
-  Standard 模式是系统默认的启动模式，一般我们 app 中大部分页面都是由该模式的页面构成的，比较常见的场景是：社交应用中，点击查看用户A信息->查看用户A粉丝->在粉丝中挑选查看用户B信息->查看用户A粉丝... 这种情况下一般我们需要保留用户操作 Activity 栈的页面所有执行顺序。
-- SingleTop:
-  SingleTop 模式一般常见于社交应用中的通知栏行为功能，例如：App 用户收到几条好友请求的推送消息，需要用户点击推送通知进入到请求者个人信息页，将信息页设置为 SingleTop 模式就可以增强复用性。
-- SingleTask：
-  SingleTask 模式一般用作应用的首页，例如浏览器主页，用户可能从多个应用启动浏览器，但主界面仅仅启动一次，其余情况都会走onNewIntent，并且会清空主界面上面的其他页面。
-- SingleInstance：
-  SingleInstance 模式常应用于独立栈操作的应用，如闹钟的提醒页面，当你在A应用中看视频时，闹钟响了，你点击闹钟提醒通知后进入提醒详情页面，然后点击返回就再次回到A的视频页面，这样就不会过多干扰到用户先前的操作了。
+ 在一个新栈中创建该Activity实例，并让多个应用共享该Activity实例。一旦这种模式的Activity实例存在于某个栈中，任何应用再激活这个Activity时都会重用该栈中的实例，其效果相当于多个应用程序共享一个应用，不管谁激活该Activity都会进入同一个应用中。此启动模式和我们使用的浏览器工作原理类似，在多个程序中访问浏览器时，如果当前浏览器没有打开，则打开浏览器，否则会在当前打开的浏览器中访问。此模式会节省大量的系统资源，因为他能保证要请求的Activity对象在当前的栈中只存在一个。
+
+"launchMode"设置为"singleInstance"的Activity总是在栈底, 只能被实例化一次, 不允许其它的Activity压入"singleInstance"的Activity所在Task栈,  即整个Task栈中只能有这么一个Activity.
+
+使用场景：SingleInstance 模式常应用于独立栈操作的应用，如闹钟的提醒页面，当你在A应用中看视频时，闹钟响了，你点击闹钟提醒通知后进入提醒详情页面，然后点击返回就再次回到A的视频页面，这样就不会过多干扰到用户先前的操作了。
 
 # 生命周期
 
-![0.5621750421825074.png](E:/notes/se/android/Android_files/0.5621750421825074.png)
-![0.4475089323059067.png](E:/notes/se/android/Android_files/0.4475089323059067.png)
+![0.5621750421825074.png](Android_files/0.5621750421825074.png)
+![0.4475089323059067.png](Android_files/0.4475089323059067.png)
 
 例子:
 
@@ -89,24 +106,24 @@ method2 代码设置![0.7581949137520234.png](Android_files/0.7581949137520234.p
 
 **显式启动**
 
-![0.7390524214529458.png](E:/notes/se/android/Android_files/0.7390524214529458.png)
+![0.7390524214529458.png](Android_files/0.7390524214529458.png)
 
 **隐式启动**
 
 **①启动系统Activity**
 
-![0.5254931069301615.png](E:/notes/se/android/Android_files/0.5254931069301615.png)
+![0.5254931069301615.png](Android_files/0.5254931069301615.png)
 
 **②启动普通Activity**
 
-![0.9944215231862644.png](E:/notes/se/android/Android_files/0.9944215231862644.png)
-![0.013035496187995514.png](E:/notes/se/android/Android_files/0.013035496187995514.png)
+![0.9944215231862644.png](Android_files/0.9944215231862644.png)
+![0.013035496187995514.png](Android_files/0.013035496187995514.png)
 
 **③startActivityForResult**
 
-![0.5732269638646565.png](E:/notes/se/android/Android_files/0.5732269638646565.png)
-![0.7884540110305135.png](E:/notes/se/android/Android_files/0.7884540110305135.png)
-![0.7341668669790355.png](E:/notes/se/android/Android_files/0.7341668669790355.png)
+![0.5732269638646565.png](Android_files/0.5732269638646565.png)
+![0.7884540110305135.png](Android_files/0.7884540110305135.png)
+![0.7341668669790355.png](Android_files/0.7341668669790355.png)
 
 # 传递内容
 
