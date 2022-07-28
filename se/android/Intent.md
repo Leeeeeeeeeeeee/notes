@@ -369,6 +369,38 @@ startActivity(intent);
 这样启动B Activity的同时，就会把D、C都finished掉。
 如果B Activity的launchMode是默认的“standard”，则B Activity会首先finished掉旧的B页面，再启动一个新的Activity B。  如果不想重新再创建一个新的B Activity，而是重用之前的B Activity，可以将B Activity的launchMode设置为“singleTask”。【特别需要注意的是：在部分手机中，如三星手机。即便是singleTask也会产生新的页面，而不是重用之前的页面。】
 
+# IntentFilter
+
+## 定义
+
+IntentFilter翻译成中文就是“意图过滤器”，主要用来过滤隐式意图。当用户进行一项操作的时候，Android系统会根据配置的 “意图过滤器” 来寻找可以响应该操作的组件，服务。
+
+例如：当用户点击PDF文件的时候，Android系统就会通过设定好的意图过滤器，进行匹配测试。找到能够打开PDF文件的APP程序。
+
+## 原理
+
+Android系统会根据我们配置的Intent Filter（意图过滤器），来进行匹配测试。匹配的时候，只会考虑三个方面：动作、数据（URI以及数据类型）和类别。也就是说Android系统会进行“动作测试”，“数据测试”，“类别测试”，来寻找可以响应隐式意图的组件或服务。
+
+另外，当对其他App程序开放组件和服务的时候也需要配置Intent Filter（意图过滤器），一个Activity可以配置多个<intent-filter>。
+
+### 动作测试
+
+对应<intent-filter>中的<action/>标签；
+
+- 如果<intent-filter>标签中有多个<action/>，那么Intent请求的Action，只要匹配其中的一条<action/>就可以通过了这条<intent-filter>的动作测试。
+
+- 如果<intent-filter>中没有包含任何<action/>，那么无论什么Intent请求都无法和这条<intent-filter>匹配。
+
+- 如果Intent请求中没有设定Action(动作)，那么这个Intent请求就将顺利地通过<intent-filter>的动作测试（前提是<intent-filter>中必须包含有<action/>，否则与第二条冲突）。
+
+### 类别测试
+
+对应<intent-filter>中的<category />标签；
+
+- Intent中的类别必须全部匹配<intent-filter>中的<category />，但是<intent-filter>中多余的<category />将不会导致匹配失败。
+
+例如：Intent中有3个类别，而意图过滤器中定义了5个，如果Intent中的3个类别都与过滤器中的匹配，那么过滤器中的另外2个，将不会导致类别测试失败。
+
 # 注意
 
 ## getIntent()
