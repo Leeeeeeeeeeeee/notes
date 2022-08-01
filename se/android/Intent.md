@@ -401,6 +401,61 @@ Android系统会根据我们配置的Intent Filter（意图过滤器），来进
 
 例如：Intent中有3个类别，而意图过滤器中定义了5个，如果Intent中的3个类别都与过滤器中的匹配，那么过滤器中的另外2个，将不会导致类别测试失败。
 
+注意：有一个例外，Android把所有传给startActivity()的隐式意图当作他们包含至少一个类别："android.intent.category.DEFAULT" （CATEGORY_DEFAULT常量）。 因此，想要接收隐式意图的活动必须在它们的意图过滤器中包含"android.intent.category.DEFAULT"。（带"android.intent.action.MAIN"和"android.intent.category.LAUNCHER"设置的过滤器是例外）
+
+### 数据测试
+
+对应<intent-filter>中的<data>标签；
+
+<data>元素指定了可以接受的Intent传过来的数据URI和数据类型，当一个意图对象中的URI被用来和一个过滤器中的URI比较时，比较的是URI的各个组成部分。
+
+例如：
+
+如果过滤器仅指定了一个scheme，所有该scheme的URIs都能够和这个过滤器相匹配；
+
+如果过滤器指定了一个scheme、主机名但没有路经部分，所有具有相同scheme和主机名的URIs都可以和这个过滤器相匹配，而不管它们的路经；
+
+如果过滤器指定了一个scheme、主机名和路经，只有具有相同scheme、主机名和路经的URIs才可以和这个过滤器相匹配。
+
+当然，一个过滤器中的路径规格可以包含通配符，这样只需要部分匹配即可。
+
+## 比较规则
+
+1. 一个既不包含URI也不包含数据类型的意图对象，仅在过滤器也同样没有指定任何URI和数据类型的情况下才能通过测试。
+
+2. 一个包含URI但没有数据类型的意图对象，仅在它的URI和一个同样没有指定数据类型的，过滤器里的URI匹配时才能通过测试。这通常发生在类似于mailto:和tel：这样的URIs上：它们并不引用实际数据。
+
+3. 一个包含数据类型但不包含URI的意图对象，仅在这个过滤器列举了同样的数据类型，而且也没有指定一个URI的情况下才能通过测试。
+
+4. 一个同时包含URI和数据类型（或者可从URI推断出数据类型）的意图对象可以通过测试，如果它的类型和过滤器中列举的类型相匹配的话。如果它的URI和这个过滤器中的一个URI相匹配或者它有一个内容content:或者文件file: URI，而且这个过滤器没有指定一个URI，那么它也能通过测试。换句话说，一个组件被假定为支持　”content: 数据“　和　“file: 数据”，如果它的过滤器仅列举了一个数据类型。
+
+例如AndroidManifest.xml中有：
+
+```xml
+<intent-filter>
+　　<action android:name="com.nanlove.wangshiming"/>
+　　<action android:name="wangshiming"/>
+　　<category android:name="android.intent.category.DEFAULT" />
+　　<category android:name="wangshiming.intent.category"/>
+　　<data android:scheme="love" android:host="hao123.com" 　　　　　　android:port="888" android:path="/MM" android:mimeType="text/plain"/>  </intent-filter>
+```
+
+对于<intent-filter>中的action项可以有多个只要匹配其中一个就可以了
+
+ intent.setAction("com.nanlove.wangshiming");//中的action也可以为wangshiming
+
+intent.addCategory("wangshiming.intent.category")代码中的addCategory并不用写因为android他有默认的category 只要配置清单中存在<category android:name="android.intent.category.DEFAULT" />就可以了.
+
+没有  "数据参数"　的情况下只要意图对象中的设置动作和类别都出现在intent-filter就能跟filter匹配，但是有数据<data android:scheme="love" android:host="hao123.com"  android:port="888" android:path="/MM" />数据项一定要完全匹配。
+
+ 当数据和数据类型 android:mimeType="text/plain"同时存在的时候，不能使用intent.setData(Uri.parse("love://hao123.com:888/MM")) ；
+
+因为setData的方法会自动清除前面的数据类型：This method automatically clears any type that was previously set by setType；
+
+所以后面的setType就无法匹配，应该使用intent.setDataAndType(Uri.parse("love://hao123.com:888/MM"), "text/plain");
+
+提示：在同一个应用内，能使用显示意图，就尽量使用显示意图，增加程序的效率，理论上隐式意图匹配规则是需要花时间寻找的。
+
 # 注意
 
 ## getIntent()
