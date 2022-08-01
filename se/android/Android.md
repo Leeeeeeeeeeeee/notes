@@ -505,51 +505,6 @@ xml属性：app:logo="@drawable/xxx"//引入一张图标；
 
 注意：Toolbar控件在布局文件中可以2个图标，3段文字，只有第一个图标可设置点击事件，标题栏的这个位置最常用来放置返回按钮图标。
 
-## Fragment
-
-**引入**
-
-建议用support包里的fragment，会不断更新，可以兼容到1.6
-
-**生命周期**
-
-![image-20220302110412972](Android_files\image-20220302110412972.png)
-
-**使用**
-
-method1 静态加载
-
-method2 动态加载
-
-![image-20220302110520216](Android_files\image-20220302110520216.png)
-
-![image-20220302110531350](Android_files\image-20220302110531350.png)
-
-**Activity与Fragment传值**
-
-**①activity向fragment传值**
-
-在Fragment类中
-
-![image-20220302110621735](Android_files\image-20220302110621735.png)
-
-![image-20220302110631934](Android_files\image-20220302110631934.png)
-
-在Activity中
-
-![image-20220302110655823](Android_files\image-20220302110655823.png)
-
-②fragment向activity传值（采用回调方法）
-在fragment中
-
-![image-20220302110717111](Android_files\image-20220302110717111.png)
-
-## UI控件
-
-### FloatingActionButton
-
-
-
 ## Menu
 
 ### 历史
